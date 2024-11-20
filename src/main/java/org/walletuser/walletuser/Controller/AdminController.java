@@ -49,6 +49,7 @@ public class AdminController {
 
     @GetMapping("/{role}/usersInRange")
     public ResponseEntity<List<User>> getUsersByRoleAndDateRange(
+            @PathVariable String role,
             @RequestParam("startDate") String startDate,
             @RequestParam("endDate") String endDate
     ) {
