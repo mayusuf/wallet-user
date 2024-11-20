@@ -19,6 +19,9 @@ public class RegisterServiceImp implements RegisterService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private KafkaProducerService kafkaProducerService;
+
     @Override
     public ResponseEntity registerUser(User user) {
 
@@ -33,6 +36,12 @@ public class RegisterServiceImp implements RegisterService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole("USER"); // Assign a default role
         userRepository.save(user);
+
+        /////  Kafka messaging calling ///////
+
+        kafkaProducerService.sendWalletCreationMessage("New Wallet Created: " + user);
+
+        ///////////////  End //////////
 
         // Map the User object to UserDTO
         UserDTO userDTO = toUserDTO(user);
